@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MQT_BuySellPressure Indicator - NinjaTrader 8</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      line-height:1.6;
+      color:#e0e0e0;
+      background:#0a0a0a;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    /* Header */
+    header{
+      background:#000;
+      padding:18px 0;
+      border-bottom:2px solid #00ff00;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-height:56px;
+    }
+    /* Logo size tuned to match title size */
+    .brand img{
+      height:38px;
+      width:auto;
+      object-fit:contain;
+      display:block;
+    }
+    .brand h1{
+      color:#00ff00;
+      font-size:1.5rem;
+      line-height:1.2;
+      letter-spacing:.2px;
+    }
+
+    /* Hero */
+    .hero{
+      background:linear-gradient(135deg,#000 0%,#1a1a1a 100%);
+      padding:80px 0;
+      text-align:center;
+      border-bottom:3px solid #00ff00;
+    }
+    .hero h2{
+      font-size:2.8rem;
+      color:#00ff00;
+      margin-bottom:18px;
+      text-shadow:0 0 20px rgba(0,255,0,.5);
+    }
+    .hero p{
+      font-size:1.25rem;
+      color:#b0b0b0;
+      margin:0 auto 28px auto;
+      max-width:980px;
+    }
+    .cta-button{
+      display:inline-block;
+      background:#00ff00;
+      color:#000;
+      padding:15px 40px;
+      text-decoration:none;
+      border-radius:5px;
+      font-weight:800;
+      font-size:1.05rem;
+      transition:all .3s;
+      border:2px solid #00ff00;
+    }
+    .cta-button:hover{
+      background:#000;
+      color:#00ff00;
+      transform:translateY(-2px);
+      box-shadow:0 5px 20px rgba(0,255,0,.4);
+    }
+
+    /* Sections */
+    .section-title{
+      text-align:center;
+      font-size:2.2rem;
+      color:#00ff00;
+      margin-bottom:50px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    /* Features */
+    .features{padding:60px 0;background:#0f0f0f}
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:30px;
+    }
+    .feature-card{
+      background:#1a1a1a;
+      padding:30px;
+      border-radius:8px;
+      border:1px solid #333;
+      transition:all .3s;
+    }
+    .feature-card:hover{
+      border-color:#00ff00;
+      box-shadow:0 5px 20px rgba(0,255,0,.2);
+      transform:translateY(-5px);
+    }
+    .feature-card h3{color:#00ff00;margin-bottom:15px;font-size:1.35rem}
+    .feature-card p{color:#b0b0b0;line-height:1.8}
+    code{color:#b8ffb8}
+
+    /* Screenshots */
+    .screenshots{padding:60px 0;background:#000}
+    .screenshot-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+      gap:30px;
+      margin-top:40px;
+    }
+    .screenshot-item{
+      background:#1a1a1a;
+      padding:20px;
+      border-radius:8px;
+      border:1px solid #333;
+      transition:all .3s;
+    }
+    .screenshot-item:hover{
+      border-color:#00ff00;
+      box-shadow:0 5px 20px rgba(0,255,0,.3);
+    }
+    .screenshot-item img{
+      width:100%;
+      border-radius:6px;
+      margin-bottom:14px;
+      display:block;
+    }
+    .screenshot-item h3{color:#00ff00;text-align:center;font-size:1.15rem}
+    .screenshot-item p{color:#9a9a9a;text-align:center;margin-top:6px;font-size:.95rem}
+
+    /* How It Works */
+    .how-it-works{padding:60px 0;background:#0f0f0f}
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:30px;
+      margin-top:40px;
+    }
+    .step{
+      background:#1a1a1a;
+      padding:30px;
+      border-radius:8px;
+      border-left:4px solid #00ff00;
+      transition:all .3s;
+    }
+    .step:hover{background:#222;transform:translateX(5px)}
+    .step-number{
+      display:inline-block;
+      background:#00ff00;
+      color:#000;
+      width:40px;height:40px;
+      border-radius:50%;
+      text-align:center;
+      line-height:40px;
+      font-weight:800;
+      font-size:1.2rem;
+      margin-bottom:15px;
+    }
+    .step h3{color:#00ff00;margin-bottom:10px}
+    .step p{color:#b0b0b0}
+
+    /* Settings */
+    .settings{padding:60px 0;background:#000}
+    .settings-table{
+      width:100%;
+      margin-top:30px;
+      border-collapse:collapse;
+      background:#1a1a1a;
+      border-radius:8px;
+      overflow:hidden;
+    }
+    .settings-table th{
+      background:#00ff00;
+      color:#000;
+      padding:15px;
+      text-align:left;
+      font-weight:800;
+    }
+    .settings-table td{
+      padding:15px;
+      border-bottom:1px solid #333;
+      color:#b0b0b0;
+      vertical-align:top;
+    }
+    .settings-table tr:hover{background:#222}
+
+    /* FAQ */
+    .faq{padding:60px 0;background:#0f0f0f}
+    .faq-item{
+      background:#1a1a1a;
+      padding:25px;
+      margin-bottom:20px;
+      border-radius:8px;
+      border-left:4px solid #00ff00;
+    }
+    .faq-item h3{color:#00ff00;margin-bottom:10px;font-size:1.15rem}
+    .faq-item p{color:#b0b0b0;line-height:1.8}
+
+    /* Footer */
+    footer{
+      background:#000;
+      padding:40px 0;
+      text-align:center;
+      border-top:2px solid #00ff00;
+    }
+    footer p{color:#666;margin-bottom:10px}
+    footer a{color:#00ff00;text-decoration:none}
+    footer a:hover{text-decoration:underline}
+
+    /* Responsive */
+    @media (max-width:768px){
+      .hero h2{font-size:2rem}
+      .hero p{font-size:1.1rem}
+      .screenshot-grid{grid-template-columns:1fr}
+      .settings-table{font-size:.92rem}
+      .brand img{height:34px}
+      .brand h1{font-size:1.35rem}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="brand">
+        <img src="https://cdn.abacus.ai/images/bdbf1587-257b-4359-bb64-2ad768a1a3cf.png" alt="Logo" />
+        <h1>MQT_BuySellPressure</h1>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h2>Instant Buy/Sell Pressure — Smoothed, Filtered, and Flashing When It Matters</h2>
+      <p>
+        MQT_BuySellPressure estimates buy vs sell volume pressure using each bar’s OHLC structure and volume,
+        smooths the result with configurable EMAs, and displays a clean “Buy Pressure” or “Sell Pressure” readout
+        on your chart when one side dominates above 50%. Optional pulse/flash behavior highlights extreme pressure
+        conditions so you can spot momentum shifts faster.
+      </p>
+      <a class="cta-button" href="#" onclick="alert('Add your download/checkout URL here'); return false;">Download Now</a>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">Key Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Dominant-Side Display (Above 50%)</h3>
+          <p>
+            Only one line is displayed at a time: <strong>Buy Pressure</strong> when buy &gt; 50%,
+            or <strong>Sell Pressure</strong> when sell &gt; 50%. If neither side dominates, nothing is drawn.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Smoothed Pressure via EMA</h3>
+          <p>
+            Uses EMA smoothing on estimated buy and sell volumes with independent lengths:
+            <code>BuyVolumeAvgLength</code> and <code>SellVolumeAvgLength</code>.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Flash/Pulse on Extreme Pressure</h3>
+          <p>
+            Enable flashing when pressure exceeds <code>FlashThresholdPercent</code>, with adjustable speed via
+            <code>FlashIntervalMs</code>.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Movable Overlay Panel</h3>
+          <p>
+            Drag-and-drop the display anywhere on your chart. Configure sizing and placement with
+            <code>PanelWidth</code>, <code>PanelHeight</code>, <code>PanelX</code>, and <code>PanelY</code>.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Right-Anchored Placement Option</h3>
+          <p>
+            Use <code>UseRightAnchor</code> to interpret <code>PanelX</code> as distance from the <strong>right</strong> edge,
+            perfect for consistent top-right positioning.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Typography + Shadow Controls</h3>
+          <p>
+            Choose <code>FontWeightStyle</code>, <code>FontSizePx</code>, and optional text shadow for better contrast:
+            <code>EnableShadow</code>, <code>ShadowOpacity</code>, <code>ShadowOffsetX</code>, <code>ShadowOffsetY</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots -->
+  <section class="screenshots">
+    <div class="container">
+      <h2 class="section-title">Chart Examples</h2>
+
+      <div class="screenshot-grid">
+        <div class="screenshot-item">
+          <img src="https://cdn.abacus.ai/images/0b5444eb-7798-4622-b8be-4b77da28b33f.png" alt="ES 30-minute chart example showing Buy Pressure readout" />
+          <h3>ES (30 Minute) — Buy Pressure Display</h3>
+          <p>Shows only the dominant line when Buy Pressure is above 50%</p>
+        </div>
+
+        <div class="screenshot-item">
+          <img src="https://cdn.abacus.ai/images/b0e7902d-7a59-4b39-8a3f-7080c7ce44fe.png" alt="ZN 30-minute chart example showing Sell Pressure readout" />
+          <h3>ZN (30 Minute) — Sell Pressure Display</h3>
+          <p>Displays Sell Pressure when selling dominates above 50%</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Estimate Buy vs Sell Volume</h3>
+          <p>
+            Each bar’s OHLC structure is used to estimate “raw” buy and sell volume portions, scaled by the bar’s total volume.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Smooth the Readings</h3>
+          <p>
+            Buy and sell series are smoothed using EMAs with independent lengths to reduce noise and stabilize the percentage.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Convert to Percent Pressure</h3>
+          <p>
+            Buy% and Sell% are computed from the smoothed totals so the two sides always sum to ~100%.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Display Only the Dominant Side</h3>
+          <p>
+            If Buy% &gt; 50%, show Buy Pressure. If Sell% &gt; 50%, show Sell Pressure. Optional flashing highlights extremes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section class="settings">
+    <div class="container">
+      <h2 class="section-title">Indicator Settings</h2>
+      <table class="settings-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Description</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>BuyVolumeAvgLength</strong></td>
+            <td>EMA length for smoothing the estimated buy volume series.</td>
+            <td>17</td>
+          </tr>
+          <tr>
+            <td><strong>SellVolumeAvgLength</strong></td>
+            <td>EMA length for smoothing the estimated sell volume series.</td>
+            <td>17</td>
+          </tr>
+          <tr>
+            <td><strong>PressureThreshold</strong></td>
+            <td>Pressure threshold input (available as a parameter; not used in the current render logic).</td>
+            <td>70</td>
+          </tr>
+
+          <tr>
+            <td><strong>StartHour</strong></td>
+            <td>Start hour for a time window input (parameter present; not used in current logic).</td>
+            <td>14</td>
+          </tr>
+          <tr>
+            <td><strong>StartMinute</strong></td>
+            <td>Start minute for a time window input (parameter present; not used in current logic).</td>
+            <td>30</td>
+          </tr>
+          <tr>
+            <td><strong>EndHour</strong></td>
+            <td>End hour for a time window input (parameter present; not used in current logic).</td>
+            <td>21</td>
+          </tr>
+          <tr>
+            <td><strong>EndMinute</strong></td>
+            <td>End minute for a time window input (parameter present; not used in current logic).</td>
+            <td>0</td>
+          </tr>
+
+          <tr>
+            <td><strong>EnableFlash</strong></td>
+            <td>Enable pulsing/flashing effect when pressure exceeds the flash threshold.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>FlashThresholdPercent</strong></td>
+            <td>Pressure level (%) required before the flash effect activates.</td>
+            <td>50.0</td>
+          </tr>
+          <tr>
+            <td><strong>FlashIntervalMs</strong></td>
+            <td>Flash cycle duration (ms). Lower values = faster pulse.</td>
+            <td>400</td>
+          </tr>
+
+          <tr>
+            <td><strong>PanelWidth</strong></td>
+            <td>Width of the display panel (pixels) used for hit testing and positioning.</td>
+            <td>315</td>
+          </tr>
+          <tr>
+            <td><strong>PanelHeight</strong></td>
+            <td>Height of the display panel (pixels) used for hit testing and positioning.</td>
+            <td>70</td>
+          </tr>
+          <tr>
+            <td><strong>FontSizePx</strong></td>
+            <td>Font size (pixels) for the pressure text.</td>
+            <td>30</td>
+          </tr>
+
+          <tr>
+            <td><strong>UseRightAnchor</strong></td>
+            <td>If true, <code>PanelX</code> is distance from the RIGHT edge; otherwise from the LEFT.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>PanelX</strong></td>
+            <td>Horizontal offset (px). Interpreted from right edge when <code>UseRightAnchor</code> is true.</td>
+            <td>20</td>
+          </tr>
+          <tr>
+            <td><strong>PanelY</strong></td>
+            <td>Vertical offset (px) from the top of the chart panel.</td>
+            <td>30</td>
+          </tr>
+
+          <tr>
+            <td><strong>FontWeightStyle</strong></td>
+            <td>Font weight: Regular, SemiBold, Bold, ExtraBold.</td>
+            <td>Bold</td>
+          </tr>
+
+          <tr>
+            <td><strong>EnableShadow</strong></td>
+            <td>Draw a shadow behind the main text for readability.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>ShadowOpacity</strong></td>
+            <td>Shadow opacity (0–1).</td>
+            <td>0.5</td>
+          </tr>
+          <tr>
+            <td><strong>ShadowOffsetX</strong></td>
+            <td>Shadow X offset in pixels.</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td><strong>ShadowOffsetY</strong></td>
+            <td>Shadow Y offset in pixels.</td>
+            <td>1.5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h3>Why do I only see Buy Pressure or Sell Pressure (not both)?</h3>
+        <p>
+          By design, the indicator draws <strong>only the dominant side</strong> when its pressure is above 50%.
+          If neither side is above 50%, it draws nothing to avoid indecision clutter.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Does this use bid/ask or order flow data?</h3>
+        <p>
+          No. It estimates buy/sell pressure from OHLC positioning within the bar and the bar’s total volume,
+          then smooths the series using EMAs.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I make the pressure less “jumpy”?</h3>
+        <p>
+          Increase <strong>BuyVolumeAvgLength</strong> and <strong>SellVolumeAvgLength</strong> to smooth the values more.
+          You can also slow down flashing by increasing <strong>FlashIntervalMs</strong>.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I make the flash trigger only on extreme readings?</h3>
+        <p>
+          Raise <strong>FlashThresholdPercent</strong> (for example, 60, 70, or higher) so pulsing only occurs when pressure is strong.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I move the display?</h3>
+        <p>
+          Yes. Click and drag the text panel on the chart. You can also control position via <strong>PanelX</strong>, <strong>PanelY</strong>
+          and enable right-side anchoring with <strong>UseRightAnchor</strong>.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What are Start/End time parameters used for?</h3>
+        <p>
+          They are available as settings in this version, but the current code does not apply a time-window filter in its calculations/rendering.
+          If you want time-window filtering added, tell me your exact desired behavior (RTH only, custom window, etc.).
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What is PressureThreshold used for?</h3>
+        <p>
+          It is exposed as a parameter, but the current render logic uses a fixed dominance threshold (&gt; 50%) and the flash threshold.
+          If you’d like <strong>PressureThreshold</strong> to control display/alerts, I can suggest a clean way to wire it in.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 myQuantrader.com - All Rights Reserved</p>
+      <p>For support, visit <a href="https://myquantrader.com">myQuantrader.com</a></p>
+    </div>
+  </footer>
+</body>
+</html>
